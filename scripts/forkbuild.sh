@@ -11,8 +11,14 @@ apt-get install -y \
   cmake \
   gettext-base
 
-rm -rf ./build ./build_release ./vendor/sqlite
+rm -rf \
+  ./build \
+  ./build_release \
+  ./vendor/faiss \
+  ./vendor/json \
+  ./vendor/sqlite
 
+git submodule update --init --recursive
 ./vendor/get_sqlite.sh
 
 pushd vendor/sqlite
@@ -22,3 +28,4 @@ popd
 sed -i 's/faiss_avx2/faiss/g' CMakeLists.txt
 sed -i 's/libfaiss_avx2/libfaiss/g' Makefile
 make loadable-release static-release npm
+cp dist/release/*.so bindings/node/sqlite-vss-linux-arm64/lib/
